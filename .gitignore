@@ -1,0 +1,9 @@
+.venv
+url_secret.py
+pyvenv.cfg
+lib/
+lib64/
+lib64
+bin/
+.idea
+__pycache__/
