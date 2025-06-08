@@ -23,7 +23,6 @@ def main(request):
 
     input_data = np.array([[buying, maint, doors, persons, lug_boot, safety]])
 
-    print(input_data)
     y_pred = model.predict(input_data)
 
-    return y_pred.tolist(), 200
+    return str(y_pred.item(0)), 200
