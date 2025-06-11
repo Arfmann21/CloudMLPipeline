@@ -1,15 +1,23 @@
 import pandas as pd
+from google.cloud import pubsub_v1
+import url_secret as us
 
-def main():
+def main(request):
+
+    publisher = pubsub_v1.PublisherClient()
+
+    # In Cloud Run, substitue us.get_id() and us.get_topic_id() with corresponding Ids
+    topic_path = publisher.topic_path(us.get_id(), us.get_topic_id())
     # Crea un DataFrame a partire dal file txt contenente il dataset
     df = pd.read_csv("gs://progetto_dataset_bucket/car.data", sep=",", header=None)
     df.columns = ["buying", "maint", "doors", "persons", "lug_boot", "safety", "class"]
 
     # TRASFORMAZIONI APPLICATE:
-    # 0. Rimozione dei record con valori nulli
-    # 1. Codifica delle feature categoriche in valori numerici
-    # 2. Rimozione dei record con valori nulli
+    # 0. Aggiunta di una colonna indice
+    # 1. Rimozione dei record con valori nulli
+    # 2. Codifica delle feature categoriche in valori numerici:
 
+    # 2. Rimozione dei record con valori nulli
     df.dropna()
 
     # 3. Codifica delle feature categoriche in valori numerici
@@ -28,3 +36,6 @@ def main():
         df.loc[i, "persons"] = 2 if df["persons"][i] == "2" else (4 if df["persons"][i] == "4" else 5)
 
     df.to_csv("gs://progetto_clean_dataset_bucket/dataset.csv", index=False)
+    publisher.publish(topic_path, b"done")
+
+    return "Ok", 200
