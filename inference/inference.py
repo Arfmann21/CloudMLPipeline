@@ -2,6 +2,7 @@ from google.cloud import storage
 import joblib
 import io
 import numpy as np
+import pandas as pd
 
 def main(request):
     bucket_name = "progetto_clean_dataset_bucket"
@@ -13,6 +14,13 @@ def main(request):
     model_bytes = blob.download_as_bytes()
 
     model = joblib.load(io.BytesIO(model_bytes))
+
+    inf_with_file = bool(request.args.get("inf_with_file"))
+
+    if inf_with_file:
+        df = pd.read_csv(request.files["file"])
+
+        return model.predict(df).tolist(), 200
 
     buying = int(request.args.get("buying"))
     maint = int(request.args.get("maint"))
