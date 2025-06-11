@@ -1,7 +1,7 @@
 joblib==1.5.1
-pandas==2.2.1
 fsspec==2025.5.1
 gcsfs==2025.5.1
 google-cloud-storage==3.1.0
 scikit-learn==1.6.1
 xgboost==3.0.2
+pandas==2.2.1
